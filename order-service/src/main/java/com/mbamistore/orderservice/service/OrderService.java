@@ -1,11 +1,14 @@
 package com.mbamistore.orderservice.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import com.mbamistore.orderservice.dto.InventoryResponse;
 import com.mbamistore.orderservice.dto.OrderRequest;
 import com.mbamistore.orderservice.model.Order;
 import com.mbamistore.orderservice.model.OrderItems;
@@ -18,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final WebClient webClient;
 
     public void createOrder(OrderRequest orderRequest) {
         Order order = new Order();
@@ -37,6 +41,23 @@ public class OrderService {
                 })
                 .toList();
         order.setOrderItems(orderItems);
+
+        List<String> skus = orderItems.stream()
+                .map(OrderItems::getOrderItemName)
+                .toList();
+
+        InventoryResponse[] inventoryResponses = webClient.get()
+                .uri("http://localhost:8081/inventory-service/api/inventory/{sku}", skus)
+                .retrieve()
+                .bodyToMono(InventoryResponse[].class)
+                .block();
+        //
+        boolean allInStock = Arrays.stream(inventoryResponses)
+                .allMatch(InventoryResponse::isInStock);
+
+        if (allInStock == false) {
+            throw new RuntimeException("Not all items are in stock");
+        }
         orderRepository.save(order);
 
     }

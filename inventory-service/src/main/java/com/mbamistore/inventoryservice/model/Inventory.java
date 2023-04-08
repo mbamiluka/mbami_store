@@ -1,5 +1,9 @@
 package com.mbamistore.inventoryservice.model;
 
+import java.util.Date;
+
+import com.mbamistore.inventoryservice.dto.InventoryResponse.InventoryResponseBuilder;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,15 +22,25 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Inventory {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long inventoryId;
     private String sku;
     private String name;
-    private String description;
-    private String price;
+    private Double price;
+    private Float coOrdinateX;
+    private Float coOrdinateY;
+    private Float reOrderLevel; // can be integer or float for weighable items
+    private String createdAt;
+    private String updatedAt;
+    private Date deletedAt;
+    private String createdBy; // useId
+    private String updatedBy;
+    private String deletedBy;
+    private String availability; // available, unavailable, deleted
     private String currency;
-    private String quantity;
-    private String status;
-    private String createdDate;
-    private String updatedDate;
+    private Integer quantity;
+    private String status; // active, inactive, deleted
+    public static InventoryResponseBuilder builder() {
+        return null;
+    }
 }

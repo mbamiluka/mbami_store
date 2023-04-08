@@ -53,4 +53,10 @@ class ProductServiceApplicationTests {
 			.andExpect(status().isOk());
 	}
 
+	@Test
+	void testGetProductById() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/1"))
+			.andExpect(status().isOk());
+	}
+
 }

@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch InventoryServiceApplication",
+            "request": "launch",
+            "mainClass": "com.mbamistore.inventoryservice.InventoryServiceApplication",
+            "projectName": "inventory-service"
+        },
+        {
+            "type": "java",
             "name": "Launch OrderServiceApplication",
             "request": "launch",
             "mainClass": "com.mbamistore.orderservice.OrderServiceApplication",
